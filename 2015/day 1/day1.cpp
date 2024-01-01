@@ -18,6 +18,10 @@ int main(){
             result++;
         } 
         else if (input[i] == ')'){
+            if(result==0){
+                cout << "Position that cause the basement : " << i+1 << "\n";
+                break;
+            }
             result--;
         } 
     }

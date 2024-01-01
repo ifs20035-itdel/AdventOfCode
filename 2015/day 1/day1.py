@@ -1,10 +1,13 @@
 def main(full_input):
     result = 0
-    for i in full_input:
-        if i=="(":
-            result= result +1
-        elif i==")":
-            result= result -1
+    for index, char in enumerate(full_input):
+        if char == "(":
+            result += 1
+        elif char == ")":
+            if result == 0:
+                print("The position that causes to basement: " + str(index+1))
+                break
+            result -= 1
 
     print("result : ", result,"\nlength : ",len(full_input))
 
