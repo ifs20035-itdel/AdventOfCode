@@ -16,7 +16,20 @@ def count_houses(directions):
         # Add the new position to the set
         visited_houses.add((x, y))
 
-    print(len(visited_houses))
+    # print(len(visited_houses))
+    return visited_houses
 
 f = open("input.txt", "r")
-count_houses(f.read())
+input = f.read()
+
+# 2nd part
+santa = ""
+robo_santa = ""
+for i in range(len(input)):
+    if i%2==0:
+        santa+=input[i]
+    else:
+        robo_santa+=input[i]
+
+# print the merged set of the 2 function(i.e: count_houses()) then return the size of the set
+print(len(count_houses(santa).union(count_houses(robo_santa))))
