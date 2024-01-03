@@ -2,40 +2,62 @@
 #include <string>
 #include <fstream>
 #include <array>
-#include <vector>
+#include <set>
 
 using namespace std;
-using xy = array<int, 2>;
-xy point = {0,0}; 
-vector<xy> global_map = {{0,0}};
+using point = array<int,2>;
 
-void countHouses(char arrow){
-  if(arrow == '^'){
-    point[1]+=1;
-  } else if (arrow == 'v'){
-    point[1]-=1;
-  } else if (arrow == '<'){
-    point[0]-=1;
-  } else if (arrow == '>'){
-    point[0]+=1;
-  } else {
-    cerr << "Error" << endl;
-  }
+set<point> countHouses(string destination){
+  point currentLocation= {0,0};
+  set<point> visited_place;
+  visited_place.insert(currentLocation);
 
-  for(int i =0;i<global_map.size();i++){
-    if(global_map[i] != point){
-      global_map.push_back(point);
+  for(char dest : destination){
+    switch (dest){
+      case '^':
+        currentLocation[1]+=1;
+        break;
+      case 'v':
+        currentLocation[1]-=1;
+        break;
+      case '>':
+        currentLocation[0]+=1;
+        break;
+      case '<':
+        currentLocation[0]-=1;
+        break;      
+      default:
+        cerr << "Error" << endl;
+        break;
     }
+    visited_place.insert(currentLocation);
   }
+  // return visited_place.size();
+  return visited_place;
+
 }
 
 int main(){
   ifstream file("input.txt");
-  string puzzle;
-  file >> puzzle;
+  string route;
+  file >> route;
 
-  for(int i=0;i<puzzle.length();i++){
-    countHouses(puzzle[i]);
+  // cout << "Result : " << countHouses(route) << endl;
+
+  // 2nd part
+  string santa = "";
+  string robo_santa = "";
+  for(int i = 0; i<route.length();i++){
+    if(i%2==0){
+      santa+=route[i];
+    } else{
+      robo_santa+=route[i];
+    }
   }
-  cout << "House : " << global_map.size() << endl;
+
+  // cout << "Santa \n" << santa << "\n" << "Robo santa: \n" << robo_santa << endl;
+  cout << countHouses(santa);
+  cout << countHouses(robo_santa);
+  // cout << "Result : " << final_house.size() << endl;
+
 }
