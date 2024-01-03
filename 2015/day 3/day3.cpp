@@ -11,13 +11,13 @@ vector<xy> global_map = {{0,0}};
 
 void countHouses(char arrow){
   if(arrow == '^'){
-    point[0]+=1;
-  } else if (arrow == 'v'){
-    point[0]-=1;
-  } else if (arrow == '<'){
-    point[1]-=1;
-  } else if (arrow == '>'){
     point[1]+=1;
+  } else if (arrow == 'v'){
+    point[1]-=1;
+  } else if (arrow == '<'){
+    point[0]-=1;
+  } else if (arrow == '>'){
+    point[0]+=1;
   } else {
     cerr << "Error" << endl;
   }

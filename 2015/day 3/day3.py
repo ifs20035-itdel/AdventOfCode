@@ -18,9 +18,5 @@ def count_houses(directions):
 
     print(len(visited_houses))
 
-# Test cases
-test1 = ">"
-test2 = "^>v<"
-test3 = "^v^v^v^v^v"
-
-count_houses(test1), count_houses(test2), count_houses(test3)
+f = open("input.txt", "r")
+count_houses(f.read())
