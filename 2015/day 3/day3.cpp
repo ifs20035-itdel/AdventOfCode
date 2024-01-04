@@ -7,7 +7,7 @@
 using namespace std;
 using point = array<int,2>;
 
-int countHouses(string destination){
+set<point> countHouses(string destination){
   point currentLocation= {0,0};
   set<point> visited_place;
   visited_place.insert(currentLocation);
@@ -32,8 +32,8 @@ int countHouses(string destination){
     }
     visited_place.insert(currentLocation);
   }
-  return visited_place.size();
-  //return visited_place;
+  // return visited_place.size();
+  return visited_place;
 
 }
 
@@ -41,23 +41,22 @@ int main(){
   ifstream file("input.txt");
   string route;
   file >> route;
+  string santa_route="";
+  string robo_santa_route="";
 
-  cout << "Result : " << countHouses(route) << endl;
-
-  // 2nd part
-  string santa = "";
-  string robo_santa = "";
-  for(int i = 0; i<route.length();i++){
+  for(int i=0;i<route.length();i++){
     if(i%2==0){
-      santa+=route[i];
+      santa_route += route[i];
     } else{
-      robo_santa+=route[i];
+      robo_santa_route += route[i];
     }
   }
 
-  // cout << "Santa \n" << santa << "\n" << "Robo santa: \n" << robo_santa << endl;
-  //cout << countHouses(santa);
-  //cout << countHouses(robo_santa);
-  // cout << "Result : " << final_house.size() << endl;
+  set<point> santa_house = countHouses(santa_route);
+  set<point> robo_santa_house = countHouses(robo_santa_route);
 
+  santa_house.insert(robo_santa_house.begin(), robo_santa_house.end());
+
+  cout << "Result : " << santa_house.size()<< endl;
+  // return 0;
 }
