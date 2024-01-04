@@ -30,7 +30,7 @@ string calculate (string base){
   int number = 0;
   string input_str = base + to_string(number);
   string hexa_hash= "";
-  while(hexa_hash.substr(0,5) != "00000" ){
+  while(hexa_hash.substr(0,6) != "000000" ){
     input_str = base + to_string(number);
     hexa_hash = md5(input_str);
     number = number + 1; 
