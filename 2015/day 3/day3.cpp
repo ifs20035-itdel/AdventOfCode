@@ -7,7 +7,7 @@
 using namespace std;
 using point = array<int,2>;
 
-set<point> countHouses(string destination){
+int countHouses(string destination){
   point currentLocation= {0,0};
   set<point> visited_place;
   visited_place.insert(currentLocation);
@@ -32,8 +32,8 @@ set<point> countHouses(string destination){
     }
     visited_place.insert(currentLocation);
   }
-  // return visited_place.size();
-  return visited_place;
+  return visited_place.size();
+  //return visited_place;
 
 }
 
@@ -42,7 +42,7 @@ int main(){
   string route;
   file >> route;
 
-  // cout << "Result : " << countHouses(route) << endl;
+  cout << "Result : " << countHouses(route) << endl;
 
   // 2nd part
   string santa = "";
@@ -56,8 +56,8 @@ int main(){
   }
 
   // cout << "Santa \n" << santa << "\n" << "Robo santa: \n" << robo_santa << endl;
-  cout << countHouses(santa);
-  cout << countHouses(robo_santa);
+  //cout << countHouses(santa);
+  //cout << countHouses(robo_santa);
   // cout << "Result : " << final_house.size() << endl;
 
 }
