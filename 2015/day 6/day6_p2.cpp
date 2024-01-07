@@ -19,10 +19,10 @@ void toggle(int x1, int y1, int x2, int y2) {
 void switch_light(int x1, int y1, int x2, int y2, int action) {
     for (int x = x1; x <= x2; ++x) {
         for (int y = y1; y <= y2; ++y) {
-          if(lights[x][y] == 0 && action == -1){
-            continue;
-          }
-          lights[x][y] += action;
+            if(lights[x][y] == 0 && action == -1){
+                continue;
+            }   
+            lights[x][y] += action;
         }
     }
 }
