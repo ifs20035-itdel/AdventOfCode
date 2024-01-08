@@ -1,15 +1,18 @@
 #include <iostream>
+#include <fstream>
 #include <unordered_map>
 #include <sstream>
 #include <functional>
 #include <string>
 #include <vector>
 
-unsigned short calculate_wire(const std::string& wire, 
-                              std::unordered_map<std::string, std::function<unsigned short()>>& circuit, 
-                              std::unordered_map<std::string, unsigned short>& cache) {
+using namespace std;
+
+unsigned short calculate_wire(const string& wire, 
+                              unordered_map<string, function<unsigned short()>>& circuit, 
+                              unordered_map<string, unsigned short>& cache) {
     if (isdigit(wire[0])) {
-        return static_cast<unsigned short>(std::stoi(wire));
+        return static_cast<unsigned short>(stoi(wire));
     }
 
     if (cache.find(wire) == cache.end()) {
@@ -20,43 +23,35 @@ unsigned short calculate_wire(const std::string& wire,
 }
 
 int main() {
-    std::unordered_map<std::string, std::function<unsigned short()>> circuit;
-    std::unordered_map<std::string, unsigned short> cache;
-    std::string line;
+    unordered_map<string, function<unsigned short()>> circuit;
+    unordered_map<string, unsigned short> cache;
 
-    // Replace with actual input
-    std::vector<std::string> instructions = {
-        "123 -> x",
-        "456 -> y",
-        "x AND y -> d",
-        "x OR y -> e",
-        "x LSHIFT 2 -> f",
-        "y RSHIFT 2 -> g",
-        "NOT x -> h",
-        "NOT y -> i"
-    };
+    ifstream file("input.txt");
+    string line;
 
-    for (const auto& instruction : instructions) {
-        std::istringstream iss(instruction);
-        std::vector<std::string> tokens{std::istream_iterator<std::string>{iss}, 
-                                        std::istream_iterator<std::string>{}};
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            istringstream iss(line);
+            vector<string> tokens{istream_iterator<string>{iss}, istream_iterator<string>{}};
 
-        if (tokens[1] == "->") {
-            circuit[tokens[2]] = [tokens, &circuit, &cache] {
-                return calculate_wire(tokens[0], circuit, cache);
-            };
-        } else if (tokens[1] == "AND") {
-            circuit[tokens[4]] = [tokens, &circuit, &cache] {
-                return calculate_wire(tokens[0], circuit, cache) & calculate_wire(tokens[2], circuit, cache);
-            };
-        } // Add other operations (OR, LSHIFT, RSHIFT, NOT) here
-    }
+            if (tokens[1] == "->") {
+                circuit[tokens[2]] = [tokens, &circuit, &cache] {
+                    return calculate_wire(tokens[0], circuit, cache);
+                };
+            } else if (tokens[1] == "AND") {
+                circuit[tokens[4]] = [tokens, &circuit, &cache] {
+                    return calculate_wire(tokens[0], circuit, cache) & calculate_wire(tokens[2], circuit, cache);
+                };
+            }
+        }
+        file.close();
 
-    // Calculate the values for each wire
-    for (const auto& wire : circuit) {
-        std::cout << wire.first << ": " << calculate_wire(wire.first, circuit, cache) << std::endl;
+        for (const auto& wire : circuit) {
+            cout << wire.first << ": " << calculate_wire(wire.first, circuit, cache) << endl;
+        }
+    } else {
+        cerr << "Unable to open the input file." << endl;
     }
 
     return 0;
 }
-
