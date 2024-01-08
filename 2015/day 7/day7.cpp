@@ -1,56 +1,96 @@
 #include <iostream>
 #include <fstream>
-#include <unordered_map>
-#include <sstream>
-#include <functional>
 #include <string>
+#include <unordered_map>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
-unsigned short calculate_wire(const string& wire, 
-                              unordered_map<string, function<unsigned short()>>& circuit, 
-                              unordered_map<string, unsigned short>& cache) {
+// Define a struct to represent circuit operations
+struct Operation {
+    vector<string> inputs;
+    string type;
+    string output;
+};
+
+// Function to calculate wire value
+unsigned short calculate_wire(const string& wire, unordered_map<string, Operation>& circuit, unordered_map<string, unsigned short>& cache) {
     if (isdigit(wire[0])) {
-        return static_cast<unsigned short>(stoi(wire));
+        // If the wire is a numeric value, convert it to an integer
+        return stoi(wire);
     }
 
     if (cache.find(wire) == cache.end()) {
-        cache[wire] = circuit[wire]();
+        const Operation& operation = circuit[wire];
+        if (operation.type == "DIRECT") {
+            // Direct assignment
+            cache[wire] = calculate_wire(operation.inputs[0], circuit, cache);
+        } else if (operation.type == "NOT") {
+            // Bitwise NOT operation
+            cache[wire] = ~calculate_wire(operation.inputs[0], circuit, cache) & 0xFFFF;
+        } else if (operation.type == "AND") {
+            // Bitwise AND operation
+            cache[wire] = calculate_wire(operation.inputs[0], circuit, cache) & calculate_wire(operation.inputs[1], circuit, cache);
+        } else if (operation.type == "OR") {
+            // Bitwise OR operation
+            cache[wire] = calculate_wire(operation.inputs[0], circuit, cache) | calculate_wire(operation.inputs[1], circuit, cache);
+        } else if (operation.type == "LSHIFT") {
+            // Left shift operation
+            cache[wire] = calculate_wire(operation.inputs[0], circuit, cache) << stoi(operation.inputs[1]);
+        } else if (operation.type == "RSHIFT") {
+            // Right shift operation
+            cache[wire] = calculate_wire(operation.inputs[0], circuit, cache) >> stoi(operation.inputs[1]);
+        }
     }
 
     return cache[wire];
 }
 
 int main() {
-    unordered_map<string, function<unsigned short()>> circuit;
+    unordered_map<string, Operation> circuit;
     unordered_map<string, unsigned short> cache;
 
-    ifstream file("input.txt");
+    ifstream input_file("input.txt");
     string line;
 
-    if (file.is_open()) {
-        while (getline(file, line)) {
-            istringstream iss(line);
-            vector<string> tokens{istream_iterator<string>{iss}, istream_iterator<string>{}};
+    while (getline(input_file, line)) {
+        istringstream iss(line);
+        string word, wire;
+        Operation operation;
 
-            if (tokens[1] == "->") {
-                circuit[tokens[2]] = [tokens, &circuit, &cache] {
-                    return calculate_wire(tokens[0], circuit, cache);
-                };
-            } else if (tokens[1] == "AND") {
-                circuit[tokens[4]] = [tokens, &circuit, &cache] {
-                    return calculate_wire(tokens[0], circuit, cache) & calculate_wire(tokens[2], circuit, cache);
-                };
+        // Parse the line into parts
+        while (iss >> word) {
+            if (word == "->") {
+                break;
             }
+            operation.inputs.push_back(word);
         }
-        file.close();
 
-        for (const auto& wire : circuit) {
-            cout << wire.first << ": " << calculate_wire(wire.first, circuit, cache) << endl;
+        iss >> wire; // Get the wire name
+
+        if (operation.inputs.size() == 1) {
+            operation.type = "DIRECT";
+        } else if (operation.inputs[0] == "NOT") {
+            operation.type = "NOT";
+        } else if (operation.inputs[1] == "AND") {
+            operation.type = "AND";
+        } else if (operation.inputs[1] == "OR") {
+            operation.type = "OR";
+        } else if (operation.inputs[1] == "LSHIFT") {
+            operation.type = "LSHIFT";
+        } else if (operation.inputs[1] == "RSHIFT") {
+            operation.type = "RSHIFT";
         }
-    } else {
-        cerr << "Unable to open the input file." << endl;
+
+        operation.output = wire;
+        circuit[wire] = operation;
+    }
+
+    // Calculate the values for each wire
+    for (const auto& entry : circuit) {
+        const string& wire = entry.first;
+        cout << wire << ": " << calculate_wire(wire, circuit, cache) << endl;
     }
 
     return 0;
