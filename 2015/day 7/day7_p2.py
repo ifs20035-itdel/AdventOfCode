@@ -49,18 +49,18 @@ def main():
 
     # Print the new value of wire "a"
     new_a_value = get_value("a", circuit, cache)
-    print(f"The new signal provided to wire 'a' is: {new_a_value}")
+    print(f"Result: value of 'a' >> {new_a_value}")
 
     # Reset the circuit to its original state
     circuit = original_circuit
     cache = {}
 
     # Calculate the values for each wire in the original circuit
-    for wire in circuit:
-        # print(f"{wire}: {get_value(wire, circuit, cache)}")
-        if wire == problem:
-            print(f"{wire}: {get_value(wire, circuit, cache)}")
-        get_value(wire,circuit, cache)
+    # for wire in circuit:
+    #     # print(f"{wire}: {get_value(wire, circuit, cache)}")
+    #     if wire == problem:
+    #         print(f"{wire}: {get_value(wire, circuit, cache)}")
+    #     get_value(wire,circuit, cache)
 
 if __name__ == "__main__":
     main()
