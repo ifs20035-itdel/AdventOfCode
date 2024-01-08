@@ -17,10 +17,10 @@ def get_value(wire, circuit, cache):
             cache[wire] = get_value(operation[0], circuit, cache)
     return cache[wire]
 
-def main():
+def main(problem):
     circuit = {}
     cache = {}
-    
+
     f = open("input.txt", "r")
     input = f.read()
     lines = input.split('\n')
@@ -30,10 +30,14 @@ def main():
         if "->" in line:
             circuit[parts[-1]] = parts[:-2]
 
-    # Calculate the values for each wire
+    # Calculate the value of certain input 
     for wire in circuit:
-        print(f"{wire}: {get_value(wire, circuit, cache)}")
+        # print(f"{wire}: {get_value(wire, circuit, cache)}")
+        if wire == problem:
+            print(f"{wire}: {get_value(wire, circuit, cache)}")
+        get_value(wire,circuit, cache)
 
 if __name__ == "__main__":
-    main()
+    certain_value = input("What wire is needed ? \n")
+    main(certain_value)
 
