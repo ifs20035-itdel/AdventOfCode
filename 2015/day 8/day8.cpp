@@ -2,7 +2,9 @@
 #include <fstream>
 #include <string>
 
-int calculateDifference(const std::string& line) {
+using namespace std;
+
+int calculateDifference(const string& line) {
     int codeLength = line.length();
     int memoryLength = 0;
     
@@ -12,7 +14,7 @@ int calculateDifference(const std::string& line) {
                 i++; // Skip next character
             } else if (line[i + 1] == 'x' && i + 3 < line.length()) {
                 i += 3; // Skip 3 char for hexadec
-            }
+            } 
         }
         memoryLength++;
     }
@@ -21,22 +23,22 @@ int calculateDifference(const std::string& line) {
 }
 
 int main() {
-    std::ifstream file("input.txt");
+    ifstream file("input.txt");
     if (!file) {
-        std::cerr << "Unable to open file" << std::endl;
+        cerr << "Unable to open file" << endl;
         return 1;
     }
 
-    std::string line;
+    string line;
     int totalDifference = 0;
 
-    while (std::getline(file, line)) {
+    while (getline(file, line)) {
         totalDifference += calculateDifference(line);
     }
 
     file.close();
 
-    std::cout << "Total difference: " << totalDifference << std::endl;
+    cout << "Total difference: " << totalDifference << endl;
 
     return 0;
 }
